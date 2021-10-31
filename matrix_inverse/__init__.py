@@ -32,7 +32,10 @@ def return_html(str_in):
     else:
         return '<h1>' + results["error"] + '</h1>'
 
-@app.route('/json/<str_in>')
-def return_json(str_in):
-    # return helper.parse_roots(str_in, True)
-    return {"message": "Hello world"}
+@app.route('/json/<square_in>')
+def json_square(square_in):
+    return helper.parse(square_in)
+
+@app.route('/json/<square_in>/<rect_in>')
+def json_rect(square_in, rect_in):
+    return helper.parse(square_in, rect_in)
