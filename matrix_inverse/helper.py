@@ -102,7 +102,7 @@ def invert(a):
             a_transpose[i][j] = a_inv_transpose[j][i]
     return a_transpose
 
-def parse(square_in, rect_in = '[]'):
+def parse(is_json, square_in, rect_in = '[]'):
     try:
         a = json.loads(square_in)
     except:
@@ -166,7 +166,8 @@ def parse(square_in, rect_in = '[]'):
         if solutions:
             results['solutions'] = solutions
     results['original matrix'] = a
-    return results
+    if json:
+        return results
 
 general = [ \
     'After "...herokuapp.com" above you should type "/json/" and then your polynomial.  Input your polynomial according to one of the two formats below: "array" or "string".', \

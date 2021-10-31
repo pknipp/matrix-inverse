@@ -34,8 +34,8 @@ def return_html(str_in):
 
 @app.route('/json/<square_in>')
 def json_square(square_in):
-    return helper.parse(square_in)
+    return helper.parse(True, square_in)
 
 @app.route('/json/<square_in>/<rect_in>')
 def json_rect(square_in, rect_in):
-    return helper.parse(square_in, rect_in)
+    return helper.parse(True, square_in, rect_in)
