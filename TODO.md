@@ -1,2 +1,1 @@
-- Reduce number of borders used in table?
-- Figure out how to have a favicon, presumably with an absolute path.
+
