@@ -20,10 +20,11 @@ def react_root(path):
 
 @app.route('/')
 def hello():
-    html = top + "<h3><p align=center>Instructions:</p></h3></ul>"
+    html = top + "<h3><p align=center>Instructions:</p></h3>"
+    html += '<p align=center><a href="https://pknipp.github.io/math">Return</a> to the Math APIs page.<ul>'
     for instruction in helper.instructions:
         html += "<li>" + instruction + "</li>"
-    return html + "</ul>" + bottom
+    return html + "</ul>" + bottom + '</p>'
 
 @app.route('/<square_in>')
 def square(square_in):
