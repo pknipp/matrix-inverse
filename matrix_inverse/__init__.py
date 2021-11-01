@@ -20,7 +20,7 @@ def react_root(path):
 
 @app.route('/')
 def hello():
-    html = top + "<h3><p align=center>Instructions:</p></h3>"
+    html = top + "<h3><p align=center>" + "/".join(helper.instructions) + "</p></h3>" + bottom
     return html
 
 @app.route('/<str_in>')

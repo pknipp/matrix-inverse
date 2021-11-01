@@ -49,16 +49,18 @@ def ludcmp(a_in):
             parity = not parity
             vv[i_max] = vv[j]
         indx[j] = i_max
+        det = None
         if not a[j][j]:
-            return {"determinant": 0}
-            # a[j][j] = tiny
+            det = 0
+            a[j][j] = tiny
         if not j == n:
             dum = 1/a[j][j]
             for i in range(j + 1, n):
                 a[i][j] *= dum
-        det = 1 if parity else -1
-        for i in range(n):
-            det *= a[i][i]
+        if det == None:
+            det = 1 if parity else -1
+            for i in range(n):
+                det *= a[i][i]
     return {"determinant": det, "lu": a, "indx":indx}
 
 def lubskb(a, indx, b_in):
@@ -83,6 +85,7 @@ def lubskb(a, indx, b_in):
         b[i] = sum / a[i][i]
     return b
 
+# Following is not used.
 def invert(a):
     n = len(a)
     identity = []
@@ -158,33 +161,34 @@ def parse(is_json, square_in, rect_in = '[]'):
             for j in range(n):
                 a_inv[i][j] = a_inv_transpose[j][i]
         results['inverse matrix'] = a_inv
+    else:
+        results["WARNING"] = "Because the determinant is zero, the results for the solutions MAY be huge."
+    if rect_in:
         solutions = []
         for row in rect_in:
-            solutions.append(lubskb(results['lu'], results['indx'], row))
-        results.pop('lu')
-        results.pop('indx')
-        if solutions:
-            results['solutions'] = solutions
+            solution = lubskb(results["lu"], results["indx"], row)
+            for i in range(len(solution)):
+                solution[i] = my_int(solution[i])
+            solutions.append(solution)
+        results['solutions'] = solutions
+    results.pop('lu')
+    results.pop('indx')
     results['original matrix'] = a
+    results['inhomogeneous part'] = rect_in
+    results['determinant'] = my_int(results["determinant"])
+    for i in range(n):
+        if results["determinant"]:
+            for j in range(n):
+                results["inverse matrix"][i][j] = my_int(results["inverse matrix"][i][j])
     if json:
         return results
 
-general = [ \
-    'After "...herokuapp.com" above you should type "/json/" and then your polynomial.  Input your polynomial according to one of the two formats below: "array" or "string".', \
-    'If you w   ant the response in html rather than in json, omit "/json" from the address.', \
+instructions = [ \
+    'After "...herokuapp.com" above you should type "/json/" and then your (square) matrix.', \
     'Spaces are allowed - but discouraged - in whichever format you use, because a "%20" will replace each space after you hit "return", thereby making the address uglier.', \
-    'The resulting page will show some "validity checks", along with the roots themselves.' \
-]
-array = [ \
-    'This is a comma-separated list of coefficients, enclosed by square brackets.  List the coefficients in order of increasing exponent, ie starting with the "constant" term.', \
-    'Example: 1+5x-4x**3 would be represented by the following array: [1,5,0,-4].', \
-]
-string = [ \
-    'Each of the polynomial\'s coefficients may be represented as an integer or decimal but not as fraction, because "/" has special meaning in a URL.',\
-    'Your variable must be a string which starts with a letter (upper- or lowercase) or underscore. If your variable has multiple characters, they may only be letters, underscores, or digits.',\
-    'Represent the product of a coefficient and a variable in the usual sequence: coefficient before variable, and represent the multiplication operation either by * or in an implied manner (ie with nothing separating the coefficient and the variable).',\
-    'Represent "x squared" either as "x**2" (preferably) or "x^2" (OK) but not as "x*x". Do likewise for larger powers.', \
-    'You need not represent the absolute value of a coefficient if it equals 1.  For instance you may type "x" instead of "1x" or "1*x", or "-x" instead of "-1x" or "-1*x".',\
-    'You need not type the polynomial\'s terms in any particular order (such as largest power first or last).',\
-    'You need not include any terms in the polynomial for which the coefficient is zero. For instance you may write "4x**2-9" instead of "4x**2+0x-9".',\
+    'Input your matrix ("A") as a comma-separated list of comma-separated lists, each list being contained by square brackets.', \
+    'example of a 2x2 matrix: [[1,2],[3,4]]', \
+    'If you want to solve a matrix equation of the form Ax = b, then type "/" followed by one or more column vectors ("b"), formatted in the same way as for your square matrix.', \
+    'example of 3 different linear systems of equations, each having the same square matrix A (which is the same as in the example above): /[[1,2],[3,4]]/[[3,5],[2,4],[-1,0]]', \
+    'If you want the response in html rather than in json, omit "/json" from the address.', \
 ]
