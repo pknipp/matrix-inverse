@@ -109,41 +109,49 @@ def parse(is_json, square_in, rect_in = '[]'):
     try:
         a = json.loads(square_in)
     except:
-        return {'error': "There is something wrong with your matrix ('A')."}
+        return {'error': {"message": "There is something wrong with your matrix 'A', as you typed it after the '/' symbol in the address bar above.", "strings": [square_in]}}
     if not isinstance(a, list):
-        return {'error': 'Your matrix should be a comma-separated list of lists, with both the inner- and outer lists enclosed by square brackets.'}
+        return {'error': {"message": 'Your matrix should be a comma-separated list of lists, with both the inner- and outer lists enclosed by square brackets.  Please double-check how you have typed it in the address bar above.', "strings": [square_in]}}
     n = len(a)
     number_of_wrong_lists = 0
+    strings1 = []
     number_of_wrong_lengths = 0
+    strings2 = []
     for inner_list in a:
         if not isinstance(inner_list, list):
             number_of_wrong_lists += 1
+            strings1.append(json.dumps(inner_list))
         else:
             if not len(inner_list) == n:
                 number_of_wrong_lengths += 1
+                strings2.append(json.dumps(inner_list))
     if number_of_wrong_lists:
-        return {'error': str(number_of_wrong_lists) + ' of your inner lists have/has something wrong with them/it.'}
+        return {'error': {"message": str(number_of_wrong_lists) + ' of your inner lists have/has something wrong with them/it.', "strings": strings1}}
     if number_of_wrong_lengths:
-        return {'error': str(number_of_wrong_lengths) + ' of your inner lists have/has the wrong length, ie have/has a length other than ' + str(n) + ". Recall that 'A' must be a square matrix."}
+        return {'error': {"message": str(number_of_wrong_lengths) + ' of your inner lists have/has the wrong length, ie have/has a length other than ' + str(n) + ". Recall that 'A' must be a square matrix.", "strings": strings2}}
     try:
         rect_in = json.loads(rect_in)
     except:
-        return {"error": "There is something wrong with your inhomogeneous part ('b', which equals " + rect_in + ")."}
+        return {"error": {"message": "There is something wrong with your inhomogeneous part ('b').", "strings": [rect_in]}}
     if rect_in:
         if not isinstance(rect_in[0], list):
             rect_in = [rect_in]
         number_of_wrong_lists = 0
+        strings1 = []
         number_of_wrong_lengths = 0
+        strings2 = []
         for inner_list in rect_in:
             if not isinstance(inner_list, list):
                 number_of_wrong_lists += 1
+                strings1.append(json.dumps(inner_list))
             else:
                 if not len(inner_list) == n:
                     number_of_wrong_lengths += 1
+                    strings2.append(json.dumps(inner_list))
         if number_of_wrong_lists:
-            return {"error": str(number_of_wrong_lists) + " of the inner lists for your inhomogeneous part have/has something wrong with them/it."}
+            return {"error": {"message": str(number_of_wrong_lists) + " of the inner lists for your inhomogeneous part have/has something wrong with them/it.", "strings": strings1}}
         if number_of_wrong_lengths:
-            return {"error": str(number_of_wrong_lengths) + " of the inner lists for your inhomogeneous part have/has the wrong length, ie have/has a length other  than " + str(n) + "."}
+            return {"error": {"message": str(number_of_wrong_lengths) + " of the inner lists for your inhomogeneous part have/has the wrong length, ie have/has a length other  than " + str(n) + ".", "strings": strings2}}
     results = ludcmp(a)
     if results['determinant']:
         zero_row = [0] * n
@@ -161,8 +169,8 @@ def parse(is_json, square_in, rect_in = '[]'):
             for j in range(n):
                 a_inv[i][j] = a_inv_transpose[j][i]
         results['inverse matrix'] = a_inv
-    else:
-        results["WARNING"] = "Because the determinant is zero, the solutions MAY be huge."
+    elif rect_in:
+        results["WARNING"] = "Because the determinant is zero, some/all solutions may be huge."
     if rect_in:
         solutions = []
         for row in rect_in:
@@ -185,7 +193,7 @@ def parse(is_json, square_in, rect_in = '[]'):
     if is_json:
         return results
     else:
-        # Strip off heading, to make subsequent rows of code less cumbersome.
+        # Strip off heading, to make subsequent rows of code less verbose.
         results = results[heading]
         original_matrix = []
         for row in results["original matrix"]:
@@ -221,15 +229,19 @@ def parse(is_json, square_in, rect_in = '[]'):
         if "WARNING" in results:
             html += "<p align=center>" + results["WARNING"] + "</p>"
         html += '<p align=center><table border="1"><thead><tr><th colspan=' + str(n)
-        html += '>original matrix</th><th colspan=' + str(len(rect_in))
-        html += '>inhomogeneous part</th></tr></thead><tbody>'
+        html += '>original matrix</th'
+        if rect_in:
+            html += '><th colspan=' + str(len(rect_in)) + '>inhomogeneous part</th'
+        html += '></tr></thead><tbody>'
         for i in range(n):
             html += '<tr>' + original_matrix[i]
             if rect_in:
                 html += inhomogeneous_part[i]
         html += '</tr></tbody><thead><tr><th colspan=' + str(n)
-        html += '>inverse matrix</th><th colspan=' + str(len(rect_in))
-        html += '>solution</th></tr></thead><tbody>'
+        html += '>inverse matrix</th'
+        if rect_in:
+            html += '><th colspan=' + str(len(rect_in)) + '>solution</th'
+        html += '></tr></thead><tbody>'
         for i in range(n):
             html += '<tr>'
             if "inverse matrix" in results:
@@ -248,7 +260,7 @@ instructions = [ \
     'Spaces are allowed - but discouraged - in whichever format you use, because a "%20" will replace each space after you hit "return", thereby making the address uglier.', \
     'Input your matrix ("A") as a comma-separated list of comma-separated lists, each list being contained by square brackets.', \
     'example of a 2x2 matrix: [[1,2],[3,4]]', \
-    'If you want to solve a matrix equation of the form Ax = b, then type "/" followed by one or more column vectors ("b"), formatted in the same way as for your square matrix.', \
+    'If you want to solve a matrix equation of the form Ax = b, then after your matrix type "/" followed by one or more column vectors ("b"), formatted in the same way as for your square matrix.', \
     'example of 3 different linear systems of equations, each having the same square matrix A (which is the same as in the example above): /[[1,2],[3,4]]/[[3,5],[2,4],[-1,0]]', \
     'If you want the response in html rather than in json, omit "/json" from the address.', \
 ]

@@ -20,7 +20,6 @@ def react_root(path):
 
 @app.route('/')
 def hello():
-    # html = top + "<h3><p align=center>" + "/".join(helper.instructions) + "</p></h3>" + bottom
     html = top + "<h3><p align=center>Instructions:</p></h3></ul>"
     for instruction in helper.instructions:
         html += "<li>" + instruction + "</li>"
@@ -32,7 +31,11 @@ def square(square_in):
     if isinstance(results, str):
         return top + results + bottom
     else:
-        return '<h1>' + results["error"] + '</h1>'
+        html = '<h4>' + results["error"]["message"] + '</h4><div>Problematic string(s)</div><ul>'
+        print("strings is ", results["error"]["strings"])
+        for string in results["error"]["strings"]:
+            html += '<li>' + string + '</li>'
+        return html + '</ul>'
 
 @app.route('/<square_in>/<rect_in>')
 def rect(square_in, rect_in):
@@ -40,7 +43,10 @@ def rect(square_in, rect_in):
     if isinstance(results, str):
         return top + results + bottom
     else:
-        return '<h1>' + results["error"] + '</h1>'
+        html = '<h4>' + results["error"]["message"] + '</h4><div>Problematic string(s)</div><ul>'
+        for string in results["error"]["strings"]:
+            html += '<li>' + string + '</li>'
+        return html + '</ul>'
 
 @app.route('/json/<square_in>')
 def json_square(square_in):
