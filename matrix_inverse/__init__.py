@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 # The following are used to wrap the html string created for server-side rendering.
 top = "<head><title>Matrix inverse</title></head><body>"
-bottom = "<span>creator:&nbsp;<a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>Peter Knipp</a></span></body>"
+bottom = "<p align=center>creator:&nbsp;<a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>Peter Knipp</a></p></body>"
 
 
 @app.route('/', defaults={'path': ''})
@@ -20,13 +20,23 @@ def react_root(path):
 
 @app.route('/')
 def hello():
-    html = top + "<h3><p align=center>" + "/".join(helper.instructions) + "</p></h3>" + bottom
-    return html
+    # html = top + "<h3><p align=center>" + "/".join(helper.instructions) + "</p></h3>" + bottom
+    html = top + "<h3><p align=center>Instructions:</p></h3></ul>"
+    for instruction in helper.instructions:
+        html += "<li>" + instruction + "</li>"
+    return html + "</ul>" + bottom
 
-@app.route('/<str_in>')
-def return_html(str_in):
-    # results = helper.parse_roots(str_in, False)
-    results = '<h1>Hello world</h1>'
+@app.route('/<square_in>')
+def square(square_in):
+    results = helper.parse(False, square_in)
+    if isinstance(results, str):
+        return top + results + bottom
+    else:
+        return '<h1>' + results["error"] + '</h1>'
+
+@app.route('/<square_in>/<rect_in>')
+def rect(square_in, rect_in):
+    results = helper.parse(False, square_in, rect_in)
     if isinstance(results, str):
         return top + results + bottom
     else:

@@ -128,7 +128,7 @@ def parse(is_json, square_in, rect_in = '[]'):
     try:
         rect_in = json.loads(rect_in)
     except:
-        return {"error": "There is something wrong with your inhomogeneous part ('B')."}
+        return {"error": "There is something wrong with your inhomogeneous part ('b', which equals " + rect_in + ")."}
     if rect_in:
         if not isinstance(rect_in[0], list):
             rect_in = [rect_in]
@@ -162,7 +162,7 @@ def parse(is_json, square_in, rect_in = '[]'):
                 a_inv[i][j] = a_inv_transpose[j][i]
         results['inverse matrix'] = a_inv
     else:
-        results["WARNING"] = "Because the determinant is zero, the results for the solutions MAY be huge."
+        results["WARNING"] = "Because the determinant is zero, the solutions MAY be huge."
     if rect_in:
         solutions = []
         for row in rect_in:
@@ -180,8 +180,68 @@ def parse(is_json, square_in, rect_in = '[]'):
         if results["determinant"]:
             for j in range(n):
                 results["inverse matrix"][i][j] = my_int(results["inverse matrix"][i][j])
-    if json:
+    heading = 'RESULTS'
+    results = {heading: results}
+    if is_json:
         return results
+    else:
+        # Strip off heading, to make subsequent rows of code less cumbersome.
+        results = results[heading]
+        original_matrix = []
+        for row in results["original matrix"]:
+            html_row = ''
+            for j in range(len(row)):
+                html_row += '<td style=text-align:center>' + str(row[j]) + '</td>'
+            original_matrix.append(html_row)
+        if rect_in:
+            inhomogeneous_part = []
+            for j in range(n):
+                html_row = ''
+                for column in results["inhomogeneous part"]:
+                    html_row += '<td style=text-align:center >' + str(column[j]) + '</td>'
+                inhomogeneous_part.append(html_row)
+
+        inverse_matrix = []
+        if "inverse matrix" in results:
+            for row in results["inverse matrix"]:
+                html_row = ''
+                for j in range(len(row)):
+                    html_row += '<td style=text-align:center>' + str(row[j]) + '</td>'
+                inverse_matrix.append(html_row)
+        if rect_in:
+            solutions = []
+            for j in range(n):
+                html_row = ''
+                for column in results["solutions"]:
+                    html_row += '<td style=text-align:center >' + str(column[j]) + '</td>'
+                solutions.append(html_row)
+
+        html = "<p align=center>" + heading + "</p>"
+        html += "<p align=center>determinant = " + str(results["determinant"]) + "</p>"
+        if "WARNING" in results:
+            html += "<p align=center>" + results["WARNING"] + "</p>"
+        html += '<p align=center><table border="1"><thead><tr><th colspan=' + str(n)
+        html += '>original matrix</th><th colspan=' + str(len(rect_in))
+        html += '>inhomogeneous part</th></tr></thead><tbody>'
+        for i in range(n):
+            html += '<tr>' + original_matrix[i]
+            if rect_in:
+                html += inhomogeneous_part[i]
+        html += '</tr></tbody><thead><tr><th colspan=' + str(n)
+        html += '>inverse matrix</th><th colspan=' + str(len(rect_in))
+        html += '>solution</th></tr></thead><tbody>'
+        for i in range(n):
+            html += '<tr>'
+            if "inverse matrix" in results:
+                html += inverse_matrix[i]
+            else:
+                if not i:
+                    html += '<td style=text-align:center rowspan=' + str(n) + ' colspan='
+                    html += str(n) + '>does<br/>not<br/>exist</td>'
+            if rect_in:
+                html += solutions[i]
+            html += '</tr>'
+        return html + '</tbody></table></p><br/>'
 
 instructions = [ \
     'After "...herokuapp.com" above you should type "/json/" and then your (square) matrix.', \

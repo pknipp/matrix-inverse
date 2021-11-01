@@ -1,2 +1,3 @@
-- Render html results via server-sided rendering.
+- Amplify error messages to include the actual strings.
+- Reduce number of lines used in table?
 - Figure out how to have a favicon, presumably with an absolute path.
