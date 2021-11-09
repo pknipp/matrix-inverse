@@ -257,7 +257,7 @@ def parse(is_json, square_in, rect_in = '[]'):
 
 instructions = [ \
     'After <tt>...herokuapp.com</tt> above you should type <tt>/json/</tt> and then your (square) matrix.', \
-    'Spaces are allowed - but discouraged - in whichever format you use, because a <tt>%20</tt> will replace each space after you hit <tt>return</tt>, thereby making the address uglier.', \
+    'Spaces are allowed - but discouraged - in whichever format you use, because <tt>%20</tt> will replace each space after you hit <tt>return</tt>, thereby making the address uglier.', \
     'Input your matrix (<i>A</i>) as a comma-separated list of comma-separated lists of numbers, each list contained by square brackets.', \
     'Represent each number may as an integer or decimal but not as fraction, because "<tt>/</tt>" has special meaning in a URL. Do not include a comma in any number (even one exceeding one thousand), because that will get confused with the commas which separate different numbers.',\
     'example of a 2x2 matrix: <tt>[[1,2],[3,4]]</tt>', \
