@@ -30,7 +30,7 @@ def hello():
 def square(square_in):
     results = helper.parse(False, square_in)
     if isinstance(results, str):
-        return top + results + bottom
+        return top + results + '</body>'
     else:
         html = '<h4>' + results["error"]["message"] + '</h4><div>Problematic string(s)</div><ul>'
         print("strings is ", results["error"]["strings"])
