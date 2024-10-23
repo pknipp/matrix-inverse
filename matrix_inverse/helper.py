@@ -225,6 +225,7 @@ def parse(is_json, square_in, rect_in = '[]'):
                 solutions.append(html_row)
 
         html = "<p align=center>" + heading + "</p>"
+        html += '<p align=center><a href="https://matrix-inverse.herokuapp.com/">Return</a>&nbsp;to the instructions page.</p>'
         html += "<p align=center>determinant = " + str(results["determinant"]) + "</p>"
         if "WARNING" in results:
             html += "<p align=center>" + results["WARNING"] + "</p>"
