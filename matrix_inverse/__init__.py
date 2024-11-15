@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 # The following are used to wrap the html string created for server-side rendering.
 top = "<head><title>Matrix inverse</title></head><body>"
-bottom = "<p align=center>creator:&nbsp;<a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>Peter Knipp</a><br/>repo:&nbsp;<a href='https://github.com/pknipp/matrix-inverse' target='_blank'  rel='noopener noreferrer'>github.com/pknipp/matrix-inverse</a></p></body>"
+bottom = "<p align=center>creator:&nbsp;<a href='https://pknipp.github.io/' target='_blank' rel='noopener noreferrer'>Peter Knipp</a><br/>repo:&nbsp;<a href='https://github.com/pknipp/matrix-inverse' target='_blank'  rel='noopener noreferrer'>github.com/pknipp/matrix-inverse</a></p>"
 
 
 @app.route('/', defaults={'path': ''})
@@ -20,11 +20,11 @@ def react_root(path):
 
 @app.route('/')
 def hello():
-    html = top + "<h3><p align=center>Instructions for Matrix Inversion:</p></h3>"
+    html = top + '<div style="padding-top: 5px; padding-left: 10px; padding-right: 30px;"><h3><p align=center>Instructions for Matrix Inversion:</p></h3>'
     html += '<p align=center><a href="https://pknipp.github.io/math">Return</a> to the Math APIs page.<ul>'
     for instruction in helper.instructions:
         html += "<li>" + instruction + "</li>"
-    return html + "</ul>" + bottom + '</p>'
+    return html + "</ul>" + bottom + '</p></div></body>'
 
 @app.route('/<square_in>')
 def square(square_in):
