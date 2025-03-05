@@ -257,12 +257,12 @@ def parse(is_json, square_in, rect_in = '[]'):
         return html + '</tbody></table></p><br/>'
 
 instructions = [ \
-    'After <tt>...herokuapp.com</tt> above you should type <tt>/json/</tt> and then your (square) matrix.', \
+    'After <tt>...herokuapp.com</tt> above you should type <tt>/api/</tt> and then your (square) matrix.', \
     'Spaces are allowed - but discouraged - in whichever format you use, because <tt>%20</tt> will replace each space after you hit <tt>return</tt>, thereby making the address uglier.', \
     'Input your matrix (<i>A</i>) as a comma-separated list of comma-separated lists of numbers, each list contained by square brackets.', \
     'Represent each number may as an integer or decimal but not as fraction, because "<tt>/</tt>" has special meaning in a URL. Do not include a comma in any number (even one exceeding one thousand), because that will get confused with the commas which separate different numbers.',\
     'example of a 2x2 matrix: <tt>[[1,2],[3,4]]</tt>', \
     'If you want to solve a matrix equation of the form <i>Ax</i> = <i>b</i>, then after your matrix type "<tt>/</tt>" followed by one or more column vectors (<i>b</i>), formatted in the same way as for your square matrix.', \
     'example of 3 different systems of equations, each having the same square matrix <i>A</i> (which is the same as in the example above): <tt>/[[1,2],[3,4]]/[[3,5],[2,4],[-1,0]]</tt>', \
-    'If you want the response in html rather than in json, simply omit <tt>/json</tt> from the address.', \
+    'If you want the response in html rather than in json, simply omit <tt>/api</tt> from the address.', \
 ]
