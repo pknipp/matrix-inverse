@@ -256,7 +256,7 @@ def parse(is_json, square_in, rect_in = '[]'):
             html += '</tr>'
         return html + '</tbody></table></p><br/>'
 
-base_url = "https://matrix-inverse."
+base_url = "https://matrix-inverse.herokuapp.com"
 frag1 = "/[[1,2],[3,4]]"
 frag2 = "/[[1,2],[3,4]]/[[3,5],[2,4],[-1,0]]"
 instructions = [ \
@@ -272,7 +272,7 @@ instructions = [ \
 
     'If you want to solve a matrix equation of the form <i>Ax</i> = <i>b</i>, then after your matrix type "<tt>/</tt>" followed by one or more column vectors (<i>b</i>), formatted in the same way as for your square matrix.', \
 
-    f"Example: <a href={base_url}{frag2}>Click here</a> for the url ...heroku.com{frag2}, which represents of 3 different systems of equations, each having the same square matrix <i>A</i> (which is the same as in the example above).", \
+    f"Example: <a href={base_url}{frag2}>Click here</a> for the url ...heroku.com{frag2}, which represents of 3 different systems of equations, each having the same square matrix <i>A</i> (which is also the same as in the example above).", \
 
     'If you want the response in html rather than in json, simply omit <tt>/api</tt> from the address.', \
 ]
